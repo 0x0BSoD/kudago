@@ -16,9 +16,12 @@ func NewApp() *App {
 }
 
 func (a *App) startup(ctx context.Context) {
-	k8sClient := kubernetes.New()
+	k8sClient, err := kubernetes.New()
+	if err != nil {
+		panic(err)
+	}
 
-	a.Kuber = &k8sClient
+	a.Kuber = k8sClient
 	a.ctx = ctx
 }
 
