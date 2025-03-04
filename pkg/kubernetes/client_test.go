@@ -103,7 +103,7 @@ users:
 			if (err != nil) != tc.expectError {
 				t.Errorf("Expected error: %v, got error: %v", tc.expectError, err)
 			}
-			if err == nil && client.ApiClient == nil {
+			if err == nil && client.CoreV1Api == nil {
 				t.Errorf("Expected ApiClient to be initialized, but got nil")
 			}
 		})

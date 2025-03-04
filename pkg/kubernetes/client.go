@@ -4,15 +4,19 @@ import (
 	"errors"
 	"fmt"
 	"io/fs"
-	"k8s.io/client-go/kubernetes"
-	"k8s.io/client-go/tools/clientcmd"
-	"k8s.io/client-go/tools/clientcmd/api"
 	"os"
 	"path/filepath"
+
+	"k8s.io/client-go/kubernetes"
+	appsv1 "k8s.io/client-go/kubernetes/typed/apps/v1"
+	corev1 "k8s.io/client-go/kubernetes/typed/core/v1"
+	"k8s.io/client-go/tools/clientcmd"
+	"k8s.io/client-go/tools/clientcmd/api"
 )
 
 type Client struct {
-	ApiClient *kubernetes.Clientset
+	CoreV1Api corev1.CoreV1Interface
+	AppsV1Api appsv1.AppsV1Interface
 	Config    *api.Config
 }
 
@@ -59,8 +63,12 @@ func New() (*Client, error) {
 		return nil, fmt.Errorf("failed to create Kubernetes clientset: %w", err)
 	}
 
+	coreClient := clientSet.CoreV1()
+	appsClient := clientSet.AppsV1()
+
 	return &Client{
-		ApiClient: clientSet,
+		AppsV1Api: appsClient,
+		CoreV1Api: coreClient,
 		Config:    config,
 	}, nil
 }
