@@ -38,5 +38,8 @@ export default createVuetify({
         sets: {
             custom: k8sIconsSet
         }
+    },
+    theme: {
+        defaultTheme: 'dark'
     }
 })

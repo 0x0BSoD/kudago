@@ -14,8 +14,8 @@
         </template>
         <template v-slot:title>
           {{ contextStore.current }}
-          <v-btn color="warning">
-            <v-icon icon="mdi-exclamation"></v-icon>
+          <v-btn icon color="warning">
+            <v-icon icon="mdi-alert-box-outline"></v-icon>
             <v-tooltip
                 activator="parent"
                 location="bottom"
