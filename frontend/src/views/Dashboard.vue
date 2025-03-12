@@ -1,3 +1,83 @@
+
+<script setup>
+import {watch, ref, onMounted, onUnmounted} from "vue";
+
+import { Nodes } from '../../wailsjs/go/main/App'
+
+const clusterAlert = ref(false)
+const eventsSearch = ref("")
+const nodesData = ref({
+  total: 0,
+  ready: 0,
+  cpu_total: 0,
+  cpu_used: 0,
+  mem_total: 0,
+  mem_used: 0,
+})
+
+// Cluster state
+import { useClusterStateStore } from '@/stores/clusterState'
+const clusterStateStore = useClusterStateStore()
+
+const items = [
+  {
+    time: '3m29s',
+    namespace: 'gitea',
+    type: 'Normal',
+    reason: 'WaitForFirstConsumer',
+    object: 'persistentvolumeclaim/data-gitea-postgresql-ha-postgresql-2',
+    message: 'waiting for first consumer to be created before binding',
+  },
+  {
+    time: '2m20s',
+    namespace: 'monitoring',
+    type: 'Warning',
+    reason: 'BackOff',
+    object: 'pod/pihole-exporter-558544bf76-v6hfc',
+    message: 'Back-off restarting failed container',
+  },
+]
+
+// Functions ==========
+//
+// ====================
+
+// Watchers ===========
+watch(clusterStateStore, async (ctx) => {
+  console.log(ctx)
+});
+// ====================
+
+// On load ==========
+onMounted(() => {
+  clusterStateStore.startPolling()
+  // Nodes().then((result) => {
+  //   nodesData.value = JSON.parse(result)
+  //   console.log(nodesData.value)
+  //   clusterStateStore.setNodesState({
+  //     total: nodesData.value.total,
+  //     ready: nodesData.value.ready,
+  //   })
+  //   clusterStateStore.setCpuState({
+  //     total: nodesData.value.cpu_total / 1000,
+  //     used: nodesData.value.cpu_used / 1000,
+  //   })
+  //   clusterStateStore.setRamState({
+  //     total: nodesData.value.mem_total,
+  //     used: nodesData.value.mem_used,
+  //   })
+  // });
+})
+// On unload ==========
+onUnmounted(() => {
+  clusterStateStore.stopPolling()
+})
+// ====================
+</script>
+
+<style scoped>
+</style>
+
 <template>
   <v-container fluid class="fill-height d-flex flex-column">
     <!-- Fixed Sections -->
@@ -124,14 +204,14 @@
                   <v-icon icon="custom:pod"></v-icon>
                   CPU
                 </v-card-title>
-                <v-card-subtitle>{{ clusterStateStore.cpu.used }}/{{ clusterStateStore.cpu.total }} Cores</v-card-subtitle>
+                <v-card-subtitle>{{ clusterStateStore.cpu.used }} / {{ clusterStateStore.cpu.total }} Cores</v-card-subtitle>
                 <v-card-text>
                   <v-progress-linear
                       :location="null"
                       color="green"
-                      max="100"
+                      :max="clusterStateStore.cpu.total"
                       min="0"
-                      model-value="45"
+                      :model-value="clusterStateStore.cpu.used"
                       rounded
                   ></v-progress-linear>
                 </v-card-text>
@@ -153,14 +233,14 @@
                   <v-icon icon="custom:pod"></v-icon>
                   Memory
                 </v-card-title>
-                <v-card-subtitle>{{ clusterStateStore.ram.used }}/{{ clusterStateStore.ram.total }} Gb</v-card-subtitle>
+                <v-card-subtitle>{{ clusterStateStore.ram.used }} / {{ clusterStateStore.ram.total }} {{ clusterStateStore.ram.total_unit }}</v-card-subtitle>
                 <v-card-text>
                   <v-progress-linear
                       :location="null"
                       color="deep-orange"
-                      max="100"
+                      :max="clusterStateStore.ram.total"
                       min="0"
-                      model-value="92"
+                      :model-value="clusterStateStore.ram.used"
                       rounded
                   ></v-progress-linear>
                 </v-card-text>
@@ -214,42 +294,3 @@
     </v-container>
   </v-container>
 </template>
-
-<script setup>
-import { watch, ref } from "vue";
-
-const clusterAlert = ref(false)
-const eventsSearch = ref("")
-
-// Cluster state
-import { useClusterStateStore } from '@/stores/clusterState'
-const clusterStateStore = useClusterStateStore()
-
-const items = [
-  {
-    time: '3m29s',
-    namespace: 'gitea',
-    type: 'Normal',
-    reason: 'WaitForFirstConsumer',
-    object: 'persistentvolumeclaim/data-gitea-postgresql-ha-postgresql-2',
-    message: 'waiting for first consumer to be created before binding',
-  },
-  {
-    time: '2m20s',
-    namespace: 'monitoring',
-    type: 'Warning',
-    reason: 'BackOff',
-    object: 'pod/pihole-exporter-558544bf76-v6hfc',
-    message: 'Back-off restarting failed container',
-  },
-]
-
-// Watchers ===========
-watch(clusterStateStore, async (ctx) => {
-  console.log(ctx)
-});
-// ====================
-</script>
-
-<style scoped>
-</style>

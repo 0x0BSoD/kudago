@@ -1,58 +1,3 @@
-<template>
-  <ContextSelector :show="contextSelectorShow" @close="contextSelectorShow = false"/>
-  <v-app>
-    <v-layout>
-
-      <v-app-bar
-          style="--draggable:drag"
-          color="primary"
-          density="compact"
-      >
-        <template v-slot:prepend>
-          <v-btn @click="toggleRail" icon="mdi-kubernetes"></v-btn>
-          <v-btn @click="contextSelectorShow = true" icon="mdi-feature-search-outline"></v-btn>
-        </template>
-        <template v-slot:title>
-          {{ contextStore.current }}
-          <v-btn icon color="warning">
-            <v-icon icon="mdi-alert-box-outline"></v-icon>
-            <v-tooltip
-                activator="parent"
-                location="bottom"
-            >
-              Ram Usage
-            </v-tooltip>
-          </v-btn>
-        </template>
-        <template v-slot:append>
-          <v-btn @click="toggleRail" icon="mdi-cog"></v-btn>
-        </template>
-      </v-app-bar>
-
-      <v-navigation-drawer
-          :rail="isRail"
-          v-model="drawler"
-          permanent
-      >
-        <v-list density="compact" nav>
-          <v-list-item
-              v-for="item in sidebarItems"
-              :title="item.title"
-              :to="item.goTo"
-              :prepend-icon="item.icon"
-              :color="item.color"
-          ></v-list-item>
-        </v-list>
-      </v-navigation-drawer>
-
-      <v-main>
-        <v-container fluid>
-          <RouterView />
-        </v-container>
-      </v-main>
-    </v-layout>
-  </v-app>
-</template>
 
 <script setup>
 import { ref, watch } from 'vue'
@@ -113,3 +58,59 @@ watch(contextStore, async (ctx) => {
 
 <style>
 </style>
+
+<template>
+  <ContextSelector :show="contextSelectorShow" @close="contextSelectorShow = false"/>
+  <v-app>
+    <v-layout>
+
+      <v-app-bar
+          style="--draggable:drag"
+          color="primary"
+          density="compact"
+      >
+        <template v-slot:prepend>
+          <v-btn @click="toggleRail" icon="mdi-kubernetes"></v-btn>
+          <v-btn @click="contextSelectorShow = true" icon="mdi-feature-search-outline"></v-btn>
+        </template>
+        <template v-slot:title>
+          {{ contextStore.current }}
+          <v-btn icon color="warning">
+            <v-icon icon="mdi-alert-box-outline"></v-icon>
+            <v-tooltip
+                activator="parent"
+                location="bottom"
+            >
+              Ram Usage
+            </v-tooltip>
+          </v-btn>
+        </template>
+        <template v-slot:append>
+          <v-btn @click="toggleRail" icon="mdi-cog"></v-btn>
+        </template>
+      </v-app-bar>
+
+      <v-navigation-drawer
+          :rail="isRail"
+          v-model="drawler"
+          permanent
+      >
+        <v-list density="compact" nav>
+          <v-list-item
+              v-for="item in sidebarItems"
+              :title="item.title"
+              :to="item.goTo"
+              :prepend-icon="item.icon"
+              :color="item.color"
+          ></v-list-item>
+        </v-list>
+      </v-navigation-drawer>
+
+      <v-main>
+        <v-container fluid>
+          <RouterView />
+        </v-container>
+      </v-main>
+    </v-layout>
+  </v-app>
+</template>

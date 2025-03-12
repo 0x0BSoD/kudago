@@ -22,16 +22,28 @@ func (c *Client) GetNodes(ctx context.Context) ([]v1.Node, error) {
 	return nodesList.Items, nil
 }
 
-// GetNodesJSON returns the list of nodes in JSON format.
-func (c *Client) GetNodesJSON(ctx context.Context) (string, error) {
-	nodes, err := c.GetNodes(ctx)
+func (c *Client) GetNode(ctx context.Context, name string) (*v1.Node, error) {
+	if c.CoreV1Api == nil {
+		return nil, fmt.Errorf("kubernetes API client is not initialized")
+	}
+
+	node, err := c.CoreV1Api.Nodes().Get(ctx, name, metaV1.GetOptions{})
+	if err != nil {
+		return nil, fmt.Errorf("failed to get nodes: %w", err)
+	}
+
+	return node, nil
+}
+
+func (c *Client) GetResourceJSON(ctx context.Context, getResource func() (interface{}, error)) (string, error) {
+	resource, err := getResource()
 	if err != nil {
 		return "", err
 	}
 
-	data, err := json.Marshal(nodes)
+	data, err := json.Marshal(resource)
 	if err != nil {
-		return "", fmt.Errorf("failed to marshal nodes list: %w", err)
+		return "", fmt.Errorf("failed to marshal resource: %w", err)
 	}
 
 	return string(data), nil

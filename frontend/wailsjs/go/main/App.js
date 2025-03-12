@@ -5,3 +5,7 @@
 export function GetContexts() {
   return window['go']['main']['App']['GetContexts']();
 }
+
+export function Nodes() {
+  return window['go']['main']['App']['Nodes']();
+}
