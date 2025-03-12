@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 
-import { Nodes } from '../../wailsjs/go/main/App'
+import { GetDashboardData } from '../../wailsjs/go/main/App'
 import { formatBytes } from "@/helpers";
 
 interface Nodes {
@@ -78,11 +78,9 @@ export const useClusterStateStore = defineStore('clusterState', () => {
             loading.value = true
             error.value = null
 
-            const response = await Nodes()
+            const response = await GetDashboardData()
 
             const data = JSON.parse(response)
-
-            console.log(data)
 
             // Update state with received data
             if (data) {
@@ -105,8 +103,8 @@ export const useClusterStateStore = defineStore('clusterState', () => {
                 })
 
                 setPodsState({
-                    total: data.total,
-                    ready: data.ready,
+                    total: data.pods_total,
+                    ready: data.pods_ready,
                 })
             }
 

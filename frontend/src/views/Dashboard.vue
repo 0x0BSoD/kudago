@@ -1,19 +1,9 @@
 
 <script setup>
-import {watch, ref, onMounted, onUnmounted} from "vue";
-
-import { Nodes } from '../../wailsjs/go/main/App'
+import {ref, onMounted, onUnmounted} from "vue";
 
 const clusterAlert = ref(false)
 const eventsSearch = ref("")
-const nodesData = ref({
-  total: 0,
-  ready: 0,
-  cpu_total: 0,
-  cpu_used: 0,
-  mem_total: 0,
-  mem_used: 0,
-})
 
 // Cluster state
 import { useClusterStateStore } from '@/stores/clusterState'
@@ -43,30 +33,14 @@ const items = [
 // ====================
 
 // Watchers ===========
-watch(clusterStateStore, async (ctx) => {
-  console.log(ctx)
-});
+// watch(clusterStateStore, async (ctx) => {
+//   console.log(ctx)
+// });
 // ====================
 
 // On load ==========
 onMounted(() => {
   clusterStateStore.startPolling()
-  // Nodes().then((result) => {
-  //   nodesData.value = JSON.parse(result)
-  //   console.log(nodesData.value)
-  //   clusterStateStore.setNodesState({
-  //     total: nodesData.value.total,
-  //     ready: nodesData.value.ready,
-  //   })
-  //   clusterStateStore.setCpuState({
-  //     total: nodesData.value.cpu_total / 1000,
-  //     used: nodesData.value.cpu_used / 1000,
-  //   })
-  //   clusterStateStore.setRamState({
-  //     total: nodesData.value.mem_total,
-  //     used: nodesData.value.mem_used,
-  //   })
-  // });
 })
 // On unload ==========
 onUnmounted(() => {
@@ -93,6 +67,7 @@ onUnmounted(() => {
               closable
           ></v-alert>
         </v-col>
+
         <v-col cols="4">
           <v-hover>
             <template v-slot:default="{ isHovering, props }">
@@ -101,6 +76,7 @@ onUnmounted(() => {
                   class="py-4"
                   :elevation="isHovering ? 2 : 1"
                   rounded="lg"
+                  to="pods"
               >
                 <v-card-title>
                   <v-icon icon="custom:pod"></v-icon>
@@ -133,6 +109,7 @@ onUnmounted(() => {
                   class="py-4"
                   :elevation="isHovering ? 2 : 1"
                   rounded="lg"
+                  to="pods"
               >
                 <v-card-title>
                   <v-icon icon="custom:pod"></v-icon>
@@ -165,6 +142,7 @@ onUnmounted(() => {
                   class="py-4"
                   :elevation="isHovering ? 2 : 1"
                   rounded="lg"
+                  to="pods"
               >
                 <v-card-title>
                   <v-icon icon="custom:pod"></v-icon>
@@ -199,6 +177,7 @@ onUnmounted(() => {
                   class="py-4"
                   :elevation="isHovering ? 2 : 1"
                   rounded="lg"
+                  to="pods"
               >
                 <v-card-title>
                   <v-icon icon="custom:pod"></v-icon>
@@ -228,6 +207,7 @@ onUnmounted(() => {
                   class="py-4"
                   :elevation="isHovering ? 2 : 1"
                   rounded="lg"
+                  to="pods"
               >
                 <v-card-title>
                   <v-icon icon="custom:pod"></v-icon>

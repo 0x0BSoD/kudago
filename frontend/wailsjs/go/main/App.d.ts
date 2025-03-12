@@ -3,4 +3,4 @@
 
 export function GetContexts():Promise<string>;
 
-export function Nodes():Promise<string>;
+export function GetDashboardData():Promise<string>;
