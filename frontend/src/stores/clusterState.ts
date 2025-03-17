@@ -44,6 +44,7 @@ export const useClusterStateStore = defineStore('clusterState', () => {
     const isPolling = ref<boolean>(false)
     const pollingInterval = ref<number>(1000) // Default 30 seconds
     const loading = ref<boolean>(false)
+    const InitialLoading = ref<boolean>(false)
     const error = ref<string | null>(null)
 
     // Timer reference
@@ -74,6 +75,8 @@ export const useClusterStateStore = defineStore('clusterState', () => {
 
     // API fetching action
     async function fetchClusterState(): Promise<void> {
+        if (InitialLoading.value) return
+
         try {
             loading.value = true
             error.value = null
@@ -123,9 +126,11 @@ export const useClusterStateStore = defineStore('clusterState', () => {
         isPolling.value = true
 
         // Immediate first fetch
+        InitialLoading.value = true
         fetchClusterState()
 
         // Set up interval for subsequent fetches
+        InitialLoading.value = false
         pollingTimer = window.setInterval(fetchClusterState, pollingInterval.value)
     }
 
